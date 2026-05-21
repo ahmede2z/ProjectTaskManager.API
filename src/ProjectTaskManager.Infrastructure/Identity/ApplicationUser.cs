@@ -4,4 +4,6 @@ namespace ProjectTaskManager.Infrastructure.Identity;
 
 public class ApplicationUser : IdentityUser
 {
+    public string? RefreshToken { get; set; }
+    public DateTime? RefreshTokenExpiresAt { get; set; }
 }
