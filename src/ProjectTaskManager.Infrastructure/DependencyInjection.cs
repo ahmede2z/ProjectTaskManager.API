@@ -48,6 +48,8 @@ public static class DependencyInjection
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
+        services.AddScoped<ApplicationDbContextInitializer>();
+
         return services;
     }
 

@@ -1,5 +1,6 @@
 using ProjectTaskManager.Application;
 using ProjectTaskManager.Infrastructure;
+using ProjectTaskManager.Infrastructure.Persistence;
 using ProjectTaskManager.API;
 using Serilog;
 
@@ -26,6 +27,21 @@ try
         .AddPresentation(builder.Configuration);
 
     var app = builder.Build();
+
+    using (var scope = app.Services.CreateScope())
+    {
+        var initializer = scope.ServiceProvider.GetRequiredService<ApplicationDbContextInitializer>();
+        try
+        {
+            await initializer.InitializeAsync(CancellationToken.None);
+            await initializer.SeedAsync(CancellationToken.None);
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Database initialization failed");
+            throw;
+        }
+    }
 
     app.UseExceptionHandler();
     app.UseSerilogRequestLogging();
