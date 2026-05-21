@@ -48,6 +48,17 @@ public static class ResultExtensions
         return result.ToActionResult();
     }
 
+    public static IActionResult ToCreatedAtAction<T>(
+        this Result<T> result,
+        string actionName,
+        Func<T, object> routeValuesSelector)
+    {
+        if (result.IsSuccess)
+            return new CreatedAtActionResult(actionName, null, routeValuesSelector(result.Value!), result.Value);
+
+        return result.ToActionResult();
+    }
+
     private static ObjectResult BadRequest(Error error) =>
         new ObjectResult(ToProblemDetails(error, StatusCodes.Status400BadRequest))
         {
