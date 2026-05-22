@@ -46,15 +46,13 @@ try
     app.UseExceptionHandler();
     app.UseSerilogRequestLogging();
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 
     app.UseAuthentication();
     app.UseAuthorization();
 
+    app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
     app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
     app.MapControllers();
 
